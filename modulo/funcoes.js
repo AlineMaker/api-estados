@@ -11,6 +11,7 @@ const MESSAGE_ERROR = {status: false, statuscode: 500, development: 'Aline Alves
 
 //Retorna a lista de estados 
 const getAllEstados = function(){
+  //Padrao do json que sera
     let message = { status: true, statuscode:200, development: 'Aline Alves de Souza', uf: []}
     dados.listaDeEstados.estados.forEach(function(item) {
      /// ou vc usa console para mostrar no terminal ou entao 
@@ -22,7 +23,7 @@ const getAllEstados = function(){
 
     //apaga um elemento existente no json
    // delete message.status
-    console.log(message)
+  //  console.log(message) faz aparecer no console #####
   if (message.uf.length > 0)
 return message // Resultado Verdadeiro da Api 200
   else
@@ -46,6 +47,13 @@ const getEstadosByregiao = function(regiao){
 
 
 const getCapitalEstados = function(pais){
+
+}
+
+
+// aline 
+// retornar cidades 
+const getCidadesBySigla = function (sigla){
 
 }
 
