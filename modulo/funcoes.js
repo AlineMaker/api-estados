@@ -2,175 +2,192 @@
  * Objetivo : Arquivo responsável pelas funções para criar API de estados e cidades
  * Data: 15/09/2025
  * Autor: Aline Alves de Souza
- * Versão 1.0 
+ * Versão 1.0
  **********************************************************************************************************************************************************************************/
-//import do arquivo d
-const dados = require('./estados_cidades.js')
-const MESSAGE_ERROR = {status: false, statuscode: 500, development: 'Aline Alves de Souza'}
+//Import do arquivo estados e cidades
+const dados = require('./estados_cidades.js');
+const MESSAGE_ERROR = {
+  status: false,
+  statuscode: 500,
+  development: 'Aline Alves de Souza',
+};
 
+//Retorne a lista de estados
+const getAllEstados = function () {
+  //Padrão do JSON que será o retorno da função
+  let message = {
+    status: true,
+    statuscode: 200,
+    development: 'Aline Alves de Souza',
+    uf: [],
+  };
 
-//Retorna a lista de estados 
-const getAllEstados = function(){
-  //Padrao do json que sera
-    let message = { status: true, statuscode:200, development: 'Aline Alves de Souza', uf: []}
-    dados.listaDeEstados.estados.forEach(function(item) {
-     /// ou vc usa console para mostrar no terminal ou entao 
-       // console.log(item.sigla) 
-       message.uf.push(item.sigla) 
-    })
-      //adiciona um novo elemento no json                     // quantidade de atributo em 
-    message.quantidade = message.uf.length
+  dados.listaDeEstados.estados.forEach(function (item) {
+    message.uf.push(item.sigla);
+  });
+  //Adiciona um novo elemento no JSON
+  message.quantidade = message.uf.length;
 
-    //apaga um elemento existente no json
-   // delete message.status
-  //  console.log(message) faz aparecer no console #####
-  if (message.uf.length > 0)
-return message // Resultado Verdadeiro da Api 200
-  else
-  return MESSAGE_ERROR // Resultado falso da Api 500
-}
+  //Apaga um elemento existente no JSON
+  //delete message.status
+
+  if (message.uf.length > 0) return message; //Resultado Verdadeiro da API 200
+  else return MESSAGE_ERROR; //Resultado Falso da API 500
+};
+
+//imprime no console e traz o retorno da funçao getAllEstados
+//console.log(getAllEstados());
 
 //Retorna dados do estado filtrando pela sigla
-const getEstadoBySigla = function(sigla){
+const getEstadosBySigla = function (sigla) {
+  let message = {
+    status: true,
+    statuscode: 200,
+    development: 'Aline Alves de Souza',
+    uf: '',
+    descricao: '',
+    capital: '',
+    regiao: '',
+  };
 
-}
+  const estado = dados.listaDeEstados.estados.find(function (item) {
+    return item.sigla === sigla.toUpperCase();
+  });
 
-//Retorna a cpital do estado filtardo pela sigla
-const getCapitalBySigla = function (sigla){
+  if (estado) {
+    message.uf = estado.sigla;
+    message.descricao = estado.nome;
+    message.capital = estado.capital;
+    message.regiao = estado.regiao;
 
-} 
+    return message;
+  } else {
+    return MESSAGE_ERROR;
+  }
+};
 
-//Retorna a lista de estados filtrando pela  regiao
-const getEstadosByregiao = function(regiao){
+// console.log(getEstadosBySigla("SP"))
 
-}
+//Retorna a capital do estado filtrando pela sigla
+const getCapitalBySigla = function (sigla) {
+  let message = {
+    status: true,
+    statuscode: 200,
+    development: 'Aline Alves de Souza',
+    uf: '',
+    descricao: '',
+    capital: '',
+  };
 
+  const estado = dados.listaDeEstados.estados.find(function (item) {
+    return item.sigla === sigla.toUpperCase();
+  });
 
-const getCapitalEstados = function(pais){
+  if (estado) {
+    message.uf = estado.sigla;
+    message.descricao = estado.nome;
+    message.capital = estado.capital;
 
-}
+    return message;
+  } else {
+    return MESSAGE_ERROR;
+  }
+};
 
+//Retorna a lista de estados filtrando pela região
+const getEstadosByRegiao = function (regiao) {
+  let message = {
+    status: true,
+    statuscode: 200,
+    development: 'Aline Alves de Souza',
+    regiao: regiao,
+    estados: [],
+  };
 
-// aline 
-// retornar cidades 
-const getCidadesBySigla = function (sigla){
+  const estadoRegiao = dados.listaDeEstados.estados.filter(function (item) {
+    return item.regiao === regiao;
+  });
 
-}
+  if (estadoRegiao.length > 0) {
+    estadoRegiao.forEach(function (estado) {
+      message.estados.push({ uf: estado.sigla, descricao: estado.nome });
+    });
+    return message;
+  } else {
+    return MESSAGE_ERROR;
+  }
+};
 
-//getAllEstados()
+//Retorna a lista de estados que formam a capital de um país filtrando pelo país
+const getEstadoIsCapitalByCountry = function (pais) {
+  let message = {
+    status: true,
+    statuscode: 200,
+    development: 'Aline Alves de Souza',
+    capitais: [],
+  };
+
+  if (pais === dados.listaDeEstados.pais) {
+    for (let i = 0; i < dados.listaDeEstados.estados.length; i++) {
+      const estado = dados.listaDeEstados.estados[i];
+
+      if (estado.capital_pais) {
+        let capitalInfo = {
+          uf: estado.sigla,
+          descricao: estado.nome,
+          capital: estado.capital,
+          regiao: estado.regiao,
+          capital_pais_ano_inicio: estado.capital_pais.ano_inicio,
+          capital_pais_ano_termino: estado.capital_pais.ano_fim,
+          capital_atual: estado.capital_pais.capital,
+        };
+
+        message.capitais.push(capitalInfo);
+      }
+    }
+  } else {
+    return MESSAGE_ERROR;
+  }
+
+  return message;
+};
+
+// console.log(getEstadoIsCapitalByCountry('Brasil'))
+
+//Retorna as cidades existentes em um estado, filtrando pela sigla
+const getCidadesBySigla = function (sigla) {
+  let message = {
+    status: true,
+    statuscode: 200,
+    development: 'Aline Alves de Souza',
+    uf: '',
+    descricao: '',
+    quantidade_cidades: '',
+    cidades: [],
+  };
+
+  const cidades = dados.listaDeEstados.estados.find(function (item) {
+    return item.sigla === sigla.toUpperCase();
+  });
+
+  if (cidades) {
+    message.uf = cidades.sigla;
+    message.descricao = cidades.nome;
+    message.cidades = cidades.cidades.map(cidades => cidades.nome);
+    message.quantidade_cidades = message.cidades.length;
+
+    return message;
+  } else {
+    return MESSAGE_ERROR;
+  }
+};
+// console.log(getCidadesBySigla("SP"))
 
 module.exports = {
-    getAllEstados
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  getAllEstados,
+  getEstadosBySigla,
+  getCapitalBySigla,
+  getEstadosByRegiao,
+  getEstadoIsCapitalByCountry,
+  getCidadesBySigla,
+};
